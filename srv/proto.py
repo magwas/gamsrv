@@ -32,16 +32,13 @@ class Proto:
 		return s
 
 	def decode(self,sock,validator):
-		print "header"
 		header=sock.recv(16)
-		print header
 		if len(header) < 16:
 			raise ProtocolError("short packet")
 		head,pktid,seq,phs,ne = struct.unpack("!IIIHH",header)
 		validator.validateHeader(pktid,seq,phs,ne)
 		if ( head != 0xdeadbeef ):
 			raise ProtocolError("no dead beef")
-		print "element"
 		valbuf=sock.recv(ne*6+2)
 		if len(valbuf) < (ne*6+2):
 			raise ProtocolError("short val+tlen")
@@ -52,10 +49,8 @@ class Proto:
 			vals[key] = value
 		tokenlen = struct.unpack("!H",valbuf[-2:])[0]
 		validator.validateTokenLen(tokenlen)
-		print "token", tokenlen
 		token = None
 		if tokenlen:
 			token = sock.recv(tokenlen)
-		print "all read"
 		validator.validateToken(token)
 		return (seq,phs,vals,token)
