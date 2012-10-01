@@ -16,3 +16,16 @@ class State:
 	def add(self,key,value):
 		return self.client.add(self.prefix+key,value)
 
+	def remove(self,key):
+		return self.client.delete(self.prefix+key)
+
+	def addOrSame(self,key,value):
+		v = self.get(key)
+		if v == value:
+			pass
+		elif v == None:
+			self.add(key,value)
+		else:
+			raise ValueError("%s%s=%s != %s"%(self.prefix,key,v,value))
+		return v
+
