@@ -1,7 +1,7 @@
 all: tests
 
 clean:
-	rm -rf html xml
+	rm -rf html xml; find -name '*.pyc'|xargs rm
 
 docs:
 	doxygen Doxyfile

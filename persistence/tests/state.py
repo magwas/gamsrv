@@ -2,12 +2,12 @@
 
 import unittest
 
-import srv.state
+from persistence.state import State
 
 class TestListener(unittest.TestCase):
 
 	def test_state(self):
-		state = srv.state.State("test")
+		state = State("test")
 		state.set("foo",3)
 		foo=state.get("foo")
 		self.assertEqual(foo,3)
