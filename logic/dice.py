@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from lib.singleton import Singleton
-from srv import log
+from lib import log
 from srv.phase import Phase
 from srv.game import Game
 from srv.variable import Variable

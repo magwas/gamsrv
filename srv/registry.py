@@ -3,7 +3,7 @@
 from xml.dom.minidom import Element
 from lib.singleton import Singleton
 from persistence.enumtype import EnumType
-from srv import log
+from lib import log
 
 class Registry(Singleton):
 

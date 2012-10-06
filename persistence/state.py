@@ -1,7 +1,7 @@
 import pylibmc
 
 from srv.config import mcdbs
-from srv.log import debug
+from lib.log import debug
 
 class State:
 	def __init__(self,prefix):

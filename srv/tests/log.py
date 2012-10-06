@@ -2,7 +2,7 @@
 
 import unittest
 
-from srv import log
+from lib import log
 
 class TestLog(unittest.TestCase):
 
