@@ -31,11 +31,13 @@ class InOut(Game, Singleton):
 
 	def __init__(self):
 		if None is getattr(self,"statemachine",None):
-			InOutPhase()
 			Variable("credit", 0, ispersistent = True, minmax = [0, 1000])
+			InOutPhase()
 			self.statemachine = {
 				"inout":
 					[("inout", self.alwaysValidPhase)]
 			}
 			Game.__init__(self)
+
+InOut()
 

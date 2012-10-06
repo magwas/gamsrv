@@ -8,20 +8,19 @@ from xml.dom.minidom import parseString
 
 class TestEnumType(unittest.TestCase):
 
-	def test_empty_todom(self):
+	def test_empty_toDom(self):
 		t1 = EnumType("test:enumtype:empty", cleanup = True, incremental = True)
-		self.assertEqual(t1.todom().toxml(),'<enum name="test:enumtype:empty"/>')
+		self.assertEqual(t1.toDom().toxml(),'<enum name="test:enumtype:empty"/>')
 		t1.registerOne("one")
-		self.assertEqual(t1.todom().toxml(),'<enum name="test:enumtype:empty"><value id="0" name="one"/></enum>')
+		self.assertEqual(t1.toDom().toxml(),'<enum name="test:enumtype:empty"><value id="0" name="one"/></enum>')
 
 	def test_enum_1(self):
 		t2 = EnumType("test:enumtype:enum",enum=('one','three','two'))
 		n = parseString('<enum name="test:enumtype:enum"><value id="0" name="one"/><value id="1" name="three"/><value id="2" name="two"/></enum>').childNodes[0]
-		self.assertEqual(t2.todom().toxml(),n.toxml())
+		self.assertEqual(t2.toDom().toxml(),n.toxml())
 
 		self.assertEqual(t2.stringFor(0),'one')
 		self.assertEqual(t2.intFor('one'),0)
-		#print t2.valueList()
 		self.assertEqual(t2.valueList(),[0,1,2])
 		self.assertTrue(t2.validate(0))
 		self.assertTrue(t2.validate(1))
@@ -31,7 +30,7 @@ class TestEnumType(unittest.TestCase):
 	def test_enum_2(self):
 		t3 = EnumType("test:enumtype:valuedenum",enumdict={42:'Three', -1:'One', 22:'Two'})
 		n3 = parseString('<enum name="test:enumtype:valuedenum"><value id="-1" name="One"/><value id="22" name="Two"/><value id="42" name="Three"/></enum>').childNodes[0]
-		self.assertEqual(t3.todom().toxml(),n3.toxml())
+		self.assertEqual(t3.toDom().toxml(),n3.toxml())
 		self.assertTrue(t3.validate(-1))
 		self.assertTrue(t3.validate(42))
 		self.assertTrue(t3.validate(22))
@@ -42,7 +41,7 @@ class TestEnumType(unittest.TestCase):
 		self.assertRaises(ValidationError,t3.validate,1)
 
 		t4 = EnumType("test:enumtype:valuedenum")
-		self.assertEqual(t3.todom().toxml(),t4.todom().toxml())
+		self.assertEqual(t3.toDom().toxml(),t4.toDom().toxml())
 		self.assertTrue(t4.validate(-1))
 		self.assertTrue(t4.validate(42))
 		self.assertTrue(t4.validate(22))
@@ -57,18 +56,17 @@ class TestEnumType(unittest.TestCase):
 		t5 = EnumType("test:enumtype:incremental",enumdict={42:'Three', -1:'One', 22:'Two'},incremental=True)
 		t5.registerOne('The only one', 1)
 		t5.registerOne('The only two')
-		#print t5.todom().toxml()
 		with self.assertRaises(ValueError):
 			t5.registerOne('THe only one', 1)
 		t5.finalize()
 		t5.persist()
 		t6 = EnumType("test:enumtype:incremental")
-		self.assertEqual(t5.todom().toxml(),t5.todom().toxml())
+		self.assertEqual(t5.toDom().toxml(),t5.toDom().toxml())
 
 		with self.assertRaises(ValueError):
 			t5.registerOne('Tiii')
 		n5 = parseString('<enum name="test:enumtype:incremental"><value id="-1" name="One"/><value id="1" name="The only one"/><value id="22" name="Two"/><value id="42" name="Three"/><value id="43" name="The only two"/></enum>').childNodes[0]
-		self.assertEqual(t5.todom().toxml(),n5.toxml())
+		self.assertEqual(t5.toDom().toxml(),n5.toxml())
 
 		with self.assertRaises(ValueError):
 			t5.registerOne(1,'The only one')

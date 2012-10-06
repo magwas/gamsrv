@@ -32,16 +32,12 @@ class EnumType(State):
 				n += 1
 		self._checkdict(enumdict)
 		if cleanup:
-			#print "cleanup"
 			self._unpersist()
-		#print "before loadfromargs:",enumdict
 		self._loadFromArgs(enumdict)
 		if (self.enumdict is None):
-			#print "from db ", name
 			self._loadFromDB()
 			persistant = False
 		if persistant:
-			#print "before persist"
 			self.persist(not incremental)
 
 	def _checkdict(self,enumdict):
@@ -72,7 +68,6 @@ class EnumType(State):
 				raise ValueError("%s min db (%s) != arg (%u)"%(self.prefix,maxkey,self.minkey))
 			if (minkey is not None) and (maxkey is not None):
 				for i in range(minkey,maxkey+1):
-					#print "%s checking %s"%(self.prefix,i)
 					n = self.get(i)
 					if n is not None and not self.enumdict.has_key(i):
 						raise ValueError("%s key %u is empty in initialisation and %s in db"%(self.prefix, i, n))
@@ -82,7 +77,6 @@ class EnumType(State):
 			self.checkSame()
 		self.set("type","enum")
 		if self.enumdict is None:	
-			#print "storing empty enum"
 			return
 		self.set("min",self.minkey)
 		self.set("max",self.maxkey)
@@ -171,7 +165,7 @@ class EnumType(State):
 		else:
 			return []
 
-	def todom(self):
+	def toDom(self):
 		r = Element("enum")
 		r.setAttribute("name",self.prefix[:-1])
 		if self.enumdict is None:

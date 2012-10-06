@@ -1,0 +1,11 @@
+This is a game server PoC.
+Don't expect a full-featured one, the main goal was to show how the following issues could be handled:
+- flexible architecture with separation of game logic and server functions,
+	all security functions (authentication, authorisation, logging, input validation) can be implemented outside game logic (they are not actually implemented though)
+	a new game logic can be inserted any time
+- fast client-server protocol
+- interface definition for the client and cms
+	interface changes are spotted/cannot be done without careful release planning
+	extension of interfaces is possible
+- horizontally scaleable architecture
+

@@ -17,16 +17,13 @@ class RangeType(State):
 		self.incremental = incremental
 		self.persistant = persistant
 		if cleanup:
-			#print "cleanup"
 			self._unpersist()
 		if (minmax is None):
-			#print "from db ", name
 			self._loadFromDB()
 			persistant = False
 		else:
 			self._loadFromArgs(minmax)
 		if persistant:
-			#print "before persist"
 			self.persist(not incremental)
 
 	def _checkRange(self,minmax):
@@ -59,7 +56,6 @@ class RangeType(State):
 			self.checkSame()
 		self.set("type","range")
 		if self.minkey is None:	
-			#print "storing empty range"
 			return
 		self.set("min",self.minkey)
 		self.set("max",self.maxkey)
@@ -100,7 +96,7 @@ class RangeType(State):
 	def boundaries(self):
 		return (self.minkey,self.maxkey)
 
-	def todom(self):
+	def toDom(self):
 		r = Element("range")
 		r.setAttribute("name",self.prefix[:-1])
 		r.setAttribute("minkey",str(self.minkey))

@@ -1,7 +1,9 @@
 #!/usr/bin/python
 
+from xml.dom.minidom import Element
 from lib.singleton import Singleton
 from persistence.enumtype import EnumType
+from srv import log
 
 class Registry(Singleton):
 
@@ -19,11 +21,12 @@ class Registry(Singleton):
 		idnum = game.getId()
 		self.games[idnum] = game
 		self.gameregistry.registerOne(name, idnum)
+		log.log(log.LOG_INFO,"registergame", "srv/registry", name,idnum=idnum)
 
 	def getGameByName(self, name):
 		return self.games[self.gameregistry.intFor(name)]
 
-	def getGameByNumber(self, idnum):
+	def getGameById(self, idnum):
 		return self.games[idnum]
 
 	def registerPhase(self, phase):
@@ -31,11 +34,12 @@ class Registry(Singleton):
 		idnum = phase.getId()
 		self.phases[idnum] = phase
 		self.phaseregistry.registerOne(name, idnum)
+		log.log(log.LOG_INFO,"registerphase", "srv/registry", name,idnum=idnum)
 
 	def getPhaseByName(self, name):
 		return self.phases[self.phaseregistry.intFor(name)]
 
-	def getPhaseByNumber(self, idnum):
+	def getPhaseById(self, idnum):
 		return self.phases[idnum]
 
 	def registerVariable(self, variable):
@@ -43,17 +47,21 @@ class Registry(Singleton):
 		idnum = variable.getId()
 		self.variables[idnum] = variable
 		self.variableregistry.registerOne(name,idnum)
+		log.log(log.LOG_INFO,"registervariable", "srv/registry", name,idnum=idnum)
 
 	def getVariableByName(self, name):
+		log.debug("registry",6,name=name)
 		return self.variables[self.variableregistry.intFor(name)]
 
-	def getVariableByNumber(self, idnum):
+	def getVariableById(self, idnum):
 		return self.variables[idnum]
 
-	def todom(self):
+	def toDom(self):
 		r = Element("registry")
-		r.appendChild(self.gameregistry.todom())
-		r.appendChild(self.phaseregistry.todom())
-		r.appendChild(self.variableregistry.todom())
+		r.appendChild(self.gameregistry.toDom())
+		r.appendChild(self.phaseregistry.toDom())
+		r.appendChild(self.variableregistry.toDom())
+		for game in self.games.values():
+			r.appendChild(game.toDom())
 		return r
 

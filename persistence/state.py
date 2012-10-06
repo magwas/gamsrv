@@ -1,32 +1,28 @@
 import pylibmc
 
 from srv.config import mcdbs
+from srv.log import debug
 
 class State:
 	def __init__(self,prefix):
 		self.client=pylibmc.client.Client(mcdbs)
 		self.prefix=prefix+':'
-		self.debug=False
 
 	def get(self,key):
 		r=self.client.get("%s:%s"%(self.prefix,key))
-		if self.debug:
-			print "%s get %s=%s"%(self.prefix,key,r)
+		debug("persistence",7,operation="get", prefix=self.prefix, key=key, value=r)
 		return r
 
 	def set(self,key,value):
-		if self.debug:
-			print "%s set %s=%s"%(self.prefix,key,value)
+		debug("persistence", 7, operation="set", prefix=self.prefix, key=key, value=value)
 		return self.client.set("%s:%s"%(self.prefix,key),value)
 
 	def add(self,key,value):
-		if self.debug:
-			print "%s add %s=%s"%(self.prefix,key,value)
+		debug("persistence", 7, operation="add", prefix=self.prefix, key=key, value=value)
 		return self.client.add("%s:%s"%(self.prefix,key),value)
 
 	def remove(self,key):
-		if self.debug:
-			print "%s remove %s"%(self.prefix,key)
+		debug("persistence", 7, operation="remove", prefix=self.prefix, key=key)
 		return self.client.delete("%s:%s"%(self.prefix,key))
 
 	def addOrSame(self,key,value):

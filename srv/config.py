@@ -11,3 +11,7 @@ mcdbs = ["127.0.0.1:21201"]
 #max length of enums (based on memcachedb settings
 maxenumlen = 10
 
+#are we in debug mode?
+debug = {
+'*':6,
+}
