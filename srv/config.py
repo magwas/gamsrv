@@ -12,6 +12,9 @@ mcdbs = ["127.0.0.1:21201"]
 maxenumlen = 10
 
 #are we in debug mode?
-debug = {
-'*':6,
+debug = False
+nodebug = {
+#"persistence":7,
+#'phaseinit':7,
+'*':3,
 }

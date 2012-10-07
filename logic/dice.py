@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import random
 from lib.singleton import Singleton
 from lib import log
 from srv.phase import Phase
@@ -25,24 +26,25 @@ class DicePhase(Phase,Singleton):
 			Variable("dice1state", 136, ispersistent = True, minmax = [1, 6])
 			Variable("dice2state", 137, ispersistent = True, minmax = [1, 6])
 			Variable("dice3state", 138, ispersistent = True, minmax = [1, 6])
-			self.accounts = ["diceingame"]
+			self.accounts = ["credit", "diceingame"]
 			self.inputs = ["bet", "holddice1", "holddice2", "holddice3"]
 			self.outputs = ["dice1state", "dice2state", "dice3state", "diceingame"]
 			Phase.__init__(self)
 
 	def play(self, state):
-		state.diceingame -= state.bet
-		if not inputs.holddice1:
+		state.credit -= state.bet
+		if not state.holddice1:
 			state.dice1state = random.randint(1, 6)
-		if not inputs.holddice1:
-			state.dice1state = random.randint(1, 6)
-		if not inputs.holddice1:
-			state.dice1state = random.randint(1, 6)
-		state.ingame += ((state.dice1state + state.dice2state + state.dice1state)*2 + 1 ) * state.bet / 22 # ((3.5*3)*2 +1)/22 = 1
+		if not state.holddice2:
+			state.dice2state = random.randint(1, 6)
+		if not state.holddice3:
+			state.dice3state = random.randint(1, 6)
+		state.diceingame += ((state.dice1state + state.dice2state + state.dice1state)*2 + 1 ) * state.bet / 22 # ((3.5*3)*2 +1)/22 = 1
 
 	def validate(self, state):
-		if state.ingame < state.bet:
+		if state.credit < state.bet:
 			return False
+		return True
 
 class DiceDoubler(DoublerPhase,Singleton):
 	_name = "dicedoubler"

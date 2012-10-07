@@ -44,10 +44,11 @@ registry="""<registry>
 	</game>
 	<game name="dice">
 		<phase name="dicewithdraw">
-			<variable id="credit" output="true"/>
+			<variable account="true" id="credit" output="true"/>
 			<variable account="true" id="diceingame"/>
 		</phase>
 		<phase name="dice">
+			<variable account="true" id="credit"/>
 			<variable account="true" id="diceingame" output="true"/>
 			<variable id="holddice1" input="true"/>
 			<variable id="holddice2" input="true"/>
@@ -74,10 +75,30 @@ class TestGame(unittest.TestCase):
 		d = Dice()
 		i = InOut()
 		r = gi.toDom().toprettyxml()
+		#print r
 		self.assertEqual(r,registry)
 		self.assertEquals(gi.getGameById(0), i)
 		dice = gi.getGameByName("dice")
 		self.assertEqual(dice, gi.getGameById(1))
+
+	def test_play(self):
+		r = Registry()
+		dicephase = r.getPhaseByName("dice")
+		state = {131:10, 135:10, 132:0, 133:0,134:0}
+		class record:
+			pass
+		state=record()
+		state.credit = 10
+		state.diceingame = 10
+		state.holddice1 = 0
+		state.holddice2 = 0
+		state.holddice3 = 0
+		state.dice1state = 0
+		state.dice2state = 0
+		state.dice3state = 0
+		state.bet = 10
+		dicephase.play(state)
+		#print state.__dict__
 
 if __name__ == '__main__':
 	unittest.main()

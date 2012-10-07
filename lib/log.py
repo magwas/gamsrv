@@ -17,6 +17,6 @@ def log(priority, eventtype, subjectum, objectum, **attrs):
 	syslog(priority,message)
 
 def debug(section,level,**attrs):
-	if config.debug and (config.debug.has_key(section) and config.debug[section] >= level) or (config.debug.has_key('*') and config.debug['*'] >= level):
+	if config.debug and ((config.debug.has_key(section) and config.debug[section] >= level) or (config.debug.has_key('*') and config.debug['*'] >= level)):
 		log(LOG_DEBUG,"debug/%s/%s"%(section,level),inspect.stack()[1][3],inspect.stack()[3][4],**attrs)
 
