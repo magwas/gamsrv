@@ -2,13 +2,13 @@
 
 import unittest
 
-from srv.registry import Registry
+from srv.registry import registry
 from logic.dice import Dice
 from srv.inout.inout import InOut
 
 from xml.dom.minidom import parseString
 
-registry="""<registry>
+registryxml="""<registry>
 	<enum name="games">
 		<value id="0" name="inout"/>
 		<value id="1" name="dice"/>
@@ -71,19 +71,17 @@ registry="""<registry>
 class TestGame(unittest.TestCase):
 
 	def test_game(self):
-		gi = Registry()
 		d = Dice()
 		i = InOut()
-		r = gi.toDom().toprettyxml()
+		r = registry.toDom().toprettyxml()
 		#print r
-		self.assertEqual(r,registry)
-		self.assertEquals(gi.getGameById(0), i)
-		dice = gi.getGameByName("dice")
-		self.assertEqual(dice, gi.getGameById(1))
+		self.assertEqual(r,registryxml)
+		self.assertEquals(registry.getGameById(0), i)
+		dice = registry.getGameByName("dice")
+		self.assertEqual(dice, registry.getGameById(1))
 
 	def test_play(self):
-		r = Registry()
-		dicephase = r.getPhaseByName("dice")
+		dicephase = registry.getPhaseByName("dice")
 		state = {131:10, 135:10, 132:0, 133:0,134:0}
 		class record:
 			pass

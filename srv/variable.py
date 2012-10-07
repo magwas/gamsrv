@@ -4,7 +4,7 @@ from persistence.state import State
 from persistence.rangetype import RangeType
 from persistence.enumtype import EnumType
 from lib.ifaced import Ifaced
-from srv.registry import Registry
+from srv.registry import registry
 
 class EnumVar(EnumType,Ifaced):
 	pass
@@ -39,6 +39,5 @@ class Variable(State, Ifaced):
 		if not incremental:
 			self.finalize()
 
-		r = Registry()
-		r.registerVariable(self)
+		registry.registerVariable(self)
 

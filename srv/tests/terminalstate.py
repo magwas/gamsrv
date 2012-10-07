@@ -4,8 +4,9 @@ import unittest
 
 from persistence.state import State
 from lib import log
-from srv.registry import Registry
 from logic.dice import Dice
+from srv.config import testloops
+from srv.registry import registry
 from srv.inout.inout import InOut
 from srv.terminalstate import TerminalState
 
@@ -18,12 +19,11 @@ class TestTerminalState(unittest.TestCase):
 		Dice()
 
 	def test_terminalplay(self):
-		r = Registry()
-		dicephase = r.getPhaseByName("dice")
-		dicegame = r.getGameByName("dice")
-		withdrawphase = r.getPhaseByName("dicewithdraw")
-		inoutgame = r.getGameByName("inout")
-		inoutphase = r.getPhaseByName("inout")
+		dicephase = registry.getPhaseByName("dice")
+		dicegame = registry.getGameByName("dice")
+		withdrawphase = registry.getPhaseByName("dicewithdraw")
+		inoutgame = registry.getGameByName("inout")
+		inoutphase = registry.getPhaseByName("inout")
 		terminal = State("terminal/1")
 		terminal.set("enabled",True)
 		terminal.set("gameenabled/%s"%dicegame.getId(),True)
@@ -31,7 +31,7 @@ class TestTerminalState(unittest.TestCase):
 		terminal.set("accounts/credit",100)
 		t = TerminalState(1)
 		n = 0
-		while n < 10000:
+		while n < testloops:
 			n += 1
 			input = {135:10, 132:0, 133:0,134:0}
 			state = t.phaseinit(dicegame,dicephase,input)

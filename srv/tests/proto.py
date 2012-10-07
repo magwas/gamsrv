@@ -27,7 +27,8 @@ class TestProto(unittest.TestCase):
 		p = Proto()
 		validator = MockValidator()
 		result = p.decode(socket,validator)
-		vals=result[2]
+		vals=result[3]
+		print "vals=",vals
 		vals[42]=result[1]
 		p.encode(socket,result[0],vals).encode('hex')
 		socket.close()
@@ -38,11 +39,11 @@ class TestProto(unittest.TestCase):
 		c.loop()
 		s = socket.socket()
 		s.connect(listenaddress)
-		buf=struct.pack("!IIIHHHiHiH",0xdeadbeef,1,2,3,2,5,9,6,10,0)
+		buf=struct.pack("!IIIHHHHiHiH",0xdeadbeef,1,2,2,3,2,5,9,6,10,0)
 		sys.stdout.flush()
 		s.sendall(buf)
 		res = s.recv(28)
-		self.assertEqual(res,'\xde\xad\xbe\xef\x00\x00\x00\x02\x00\x03\x00*\x00\x00\x00\x03\x00\x05\x00\x00\x00\t\x00\x06\x00\x00\x00\n')
+		self.assertEqual(res,'\xde\xad\xbe\xef\x00\x00\x00\x02\x00\x03\x00*\x00\x00\x00\x02\x00\x05\x00\x00\x00\t\x00\x06\x00\x00\x00\n')
 		c.shutdown()
 
 	def tearDown(self):

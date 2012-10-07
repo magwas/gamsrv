@@ -6,6 +6,7 @@ import struct
   head 4      !I     always 0xdeadbeef
 	id   4      !I     terminal ID
 	seq  4      !I     sequence value
+	gam  2      !H     game
 	phs  2      !H     game phase
 	ne   2      !H     number of values
 	val  ne*6   ne*!Hi key,value
@@ -32,10 +33,10 @@ class Proto:
 		return s
 
 	def decode(self,sock,validator):
-		header=sock.recv(16)
-		if len(header) < 16:
+		header=sock.recv(18)
+		if len(header) < 18:
 			raise ProtocolError("short packet")
-		head,pktid,seq,phs,ne = struct.unpack("!IIIHH",header)
+		head,pktid,seq,gam,phs,ne = struct.unpack("!IIIHHH",header)
 		validator.validateHeader(pktid,seq,phs,ne)
 		if ( head != 0xdeadbeef ):
 			raise ProtocolError("no dead beef")
@@ -53,4 +54,4 @@ class Proto:
 		if tokenlen:
 			token = sock.recv(tokenlen)
 		validator.validateToken(token)
-		return (seq,phs,vals,token)
+		return (seq,gam,phs,vals,token)

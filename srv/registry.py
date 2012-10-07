@@ -65,3 +65,5 @@ class Registry(Singleton):
 			r.appendChild(game.toDom())
 		return r
 
+registry = Registry()
+

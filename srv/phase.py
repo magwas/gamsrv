@@ -3,7 +3,7 @@
 from xml.dom.minidom import Element
 from lib.ifaced import Ifaced
 from persistence.state import State
-from srv.registry import Registry
+from srv.registry import registry
 
 class Phase(Ifaced,State):
 	"""
@@ -14,12 +14,11 @@ class Phase(Ifaced,State):
 	"""
 
 	def __init__(self):
-		r = Registry()
-		r.registerPhase(self)
+		registry.registerPhase(self)
 		allvars = set(self.accounts).union(set(self.inputs)).union(set(self.outputs))
 		self.variables = {}
 		for varname in allvars:
-			var = r.getVariableByName(varname)
+			var = registry.getVariableByName(varname)
 			self.variables[var.getId()] = var
 		State.__init__(self,self._name)
 		# redundant self.addOrSame("variables",sorted(self.variables.keys)))
@@ -52,9 +51,8 @@ class Phase(Ifaced,State):
 	def toDom(self):
 		r = Element("phase")
 		r.setAttribute("name",self._name)
-		reg = Registry()
 		for n in self.variables.keys():
-			i = reg.getVariableById(n).getName()
+			i = registry.getVariableById(n).getName()
 			g=Element("variable")
 			g.setAttribute("id",str(i))
 			if i in self.accounts:

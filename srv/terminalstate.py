@@ -1,6 +1,6 @@
 from lib.validator import ValidationError
 from persistence.state import State
-from srv.registry import Registry
+from srv.registry import registry
 from lib import log
 
 class PhaseState(object):
@@ -59,7 +59,6 @@ class TerminalState(State):
 		self.terminalid = terminalid
 		
 	def phaseinit(self, game, phase, inputs):
-		reg = Registry()
 		if not self.get("gameenabled/%s"%game.getId()):
 			raise ValidationError("game %s for terminal %s is disabled"%(game.getName(),self.terminalid))
 		phasestate = PhaseState(phase.variables)
@@ -70,7 +69,7 @@ class TerminalState(State):
 			if v in phase.inputs:
 				if not inputs.has_key(k):
 					raise ValidationError("input for phase %s does not contain %s"%(phase.getName(),v))
-				var = reg.getVariableById(k)
+				var = registry.getVariableById(k)
 				value = inputs[k]
 				var.validate(value)
 				phasestate[v] = value
@@ -81,22 +80,42 @@ class TerminalState(State):
 		return phasestate
 
 	def afterphase(self, game, phase, phasestate):
-		reg = Registry()
 		outstate = {}
 		logstate = {}
 		for (k,vobj) in phase.variables.items():
 			v = vobj.getName()
 			if v in phase.accounts:
-				var = reg.getVariableById(k)
+				var = registry.getVariableById(k)
 				value = phasestate[v]
 				var.validate(value)
 				self.set("accounts/%s"%v,value)
 			if v in phase.outputs:
 				value = phasestate[v]
-				var = reg.getVariableById(k)
+				var = registry.getVariableById(k)
 				var.validate(value)
 				outstate[k] = value
 				logstate[v] = value
 		log.log(log.LOG_INFO,"afterphase",self.terminalid,phase.getName(),**logstate)
 		return outstate
-				
+
+	def validateKeyValue(self,phs,key,value):
+		phase = registry.getPhaseById(phs)
+		var = registry.getVariableById(key)
+		varname = var.getName()
+		if not varname in phase.inputs:
+			print varname, phase.inputs
+			raise ValueError
+		var.validate(value)
+		return True
+
+	def validateHeader(self,pktid,seq,phs,ne):
+		return True
+
+	def validateTokenLen(self,tokenlen):
+		if tokenlen != 0:
+			return False
+		return True
+
+	def validateToken(self,tokenlen):
+		return False
+
