@@ -1,11 +1,15 @@
 This is a game server PoC.
 Don't expect a full-featured one, the main goal was to show how the following issues could be handled:
 - flexible architecture with separation of game logic and server functions,
-	all security functions (authentication, authorisation, logging, input validation) can be implemented outside game logic (they are not actually implemented though)
-	a new game logic can be inserted any time
+	all security functions (authentication, authorisation, audit, input validation) can be implemented outside game logic (only input validation and audit is implemented, as only those are actually interesting in this respect)
+	a new game logic can be inserted without modifying the server
 - fast client-server protocol
-- interface definition for the client and cms
+	Actually it is just sketched up, a server only exists in some of the unit tests
+- interface definition for the client,cms and logic
 	interface changes are spotted/cannot be done without careful release planning
 	extension of interfaces is possible
+	even the logic interface is thoroughly validates (this is responsible for most of the cpu usage)
 - horizontally scaleable architecture
+	based on memcachedb - scaleable
+	servers could be scaled with load balancing which keeps tcp sessions
 

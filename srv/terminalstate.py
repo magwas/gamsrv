@@ -6,7 +6,6 @@ from lib import log
 class PhaseState(object):
 	"""
 		The phase state holds the state seen by a phase
-		FIXME: getattr, setattr, getitem and setitem 
 	"""
 	def __init__(self,variables):
 		vv = {}
